@@ -1,0 +1,118 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    margin: 0;
+    background-image: url(/Logo/Coalprints.png);
+    background-blend-mode:soft-light;
+    background-size: cover; 
+    background-repeat: no-repeat; 
+    background-position: center; 
+}
+
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: left;
+}
+
+.logo {
+    max-width: 80px;
+    height: auto;
+    margin: 20px 50px 0 50px;
+}
+
+.loader {
+    font-size: 24px;
+    color: #333;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#pdf-viewer {
+    width: 55%;
+    height: 75%;
+    max-width: 1200px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    perspective: 1000px;
+}
+
+.flipbook {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    transform-style:preserve-3d;
+}
+
+.page {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backface-visibility: hidden;
+    position: relative;
+    transition: transform 0.5s;
+}
+
+.page canvas {
+    width: 100%;
+    height: 100%;
+}
+
+#page-controls {
+    display: none; /* Initially hidden */
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+button {
+    cursor: pointer;
+    padding: 10px 20px;
+    background-color: #009fe3;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    margin: 0 5px;
+    width: 160px; /* Increase width for both buttons */
+    height: 50px; /* Same height for both buttons */
+    font-size: 18px; /* Increase font size */
+}
+
+button:hover {
+    background-color: #009fe3;
+}
+
+.magnifier {
+    position: absolute;
+    border: 1px solid #ccc;
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    display: none;
+    pointer-events: none;
+    background-color: white;
+    z-index: 10;
+}
+
+.magnifier img {
+    position: absolute;
+    width: 300%; /* Zoom level */
+    height: 300%;
+}
+
+.zoomed {
+    transform: scale(2); /* Adjust zoom level as needed */
+    z-index: 1000;
+}

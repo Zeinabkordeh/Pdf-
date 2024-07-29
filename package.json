@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "pdfjs-dist": "^4.4.168",
+    "turn.js": "^1.0.5"
+  }
+}
