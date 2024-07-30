@@ -1,7 +1,7 @@
 import * as pdfjsLib from './node_modules/pdfjs-dist/build/pdf.mjs';
 
 // Path to your PDF file
-const pdfPath = 'pdfs/HHWW.pdf';
+const pdfPath = 'pdfs/HHWWnew.pdf';
 
 // Initialize PDF.js
 pdfjsLib.GlobalWorkerOptions.workerSrc = './node_modules/pdfjs-dist/build/pdf.worker.mjs';
