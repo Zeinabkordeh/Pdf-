@@ -11,7 +11,7 @@ let pageNum = 1;
 let pageRendering = false;
 let pageNumPending = null;
 let scale = 1;
-let zoomScale = 2; // Scale factor for zoom
+let zoomScale = 3; // Scale factor for zoom
 
 const viewer = document.getElementById('pdf-viewer');
 const flipbook = document.createElement('div');
@@ -36,6 +36,11 @@ document.getElementById('page-1').appendChild(canvasLeft);
 const canvasRight = document.createElement('canvas');
 canvasRight.id = 'canvas-2';
 document.getElementById('page-2').appendChild(canvasRight);
+
+const magnifier = document.createElement('div');
+magnifier.id = 'magnifier';
+magnifier.className = 'magnifier';
+document.body.appendChild(magnifier);
 
 function renderPage(num, scale) {
     pageRendering = true;
@@ -111,13 +116,21 @@ function onNextPage() {
 
 function zoomIn(event) {
     const canvas = event.currentTarget.querySelector('canvas');
-    canvas.style.transform = 'scale(2)';
-    canvas.style.transformOrigin = `${event.offsetX}px ${event.offsetY}px`;
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const zoomedArea = document.getElementById('magnifier');
+    zoomedArea.style.backgroundImage = `url(${canvas.toDataURL()})`;
+    zoomedArea.style.backgroundSize = `${canvas.width * zoomScale}px ${canvas.height * zoomScale}px`;
+    zoomedArea.style.backgroundPosition = `-${x * zoomScale}px -${y * zoomScale}px`;
+    zoomedArea.style.display = 'block';
+    zoomedArea.style.left = `${event.clientX + 10}px`;
+    zoomedArea.style.top = `${event.clientY + 10}px`;
 }
 
-function zoomOut(event) {
-    const canvas = event.currentTarget.querySelector('canvas');
-    canvas.style.transform = 'scale(1)';
+function hideZoom() {
+    const zoomedArea = document.getElementById('magnifier');
+    zoomedArea.style.display = 'none';
 }
 
 document.getElementById('prev-page').addEventListener('click', onPrevPage);
@@ -125,9 +138,8 @@ document.getElementById('next-page').addEventListener('click', onNextPage);
 document.getElementById('first-page').addEventListener('click', () => queueRenderPage(1, scale));
 
 document.querySelectorAll('.page').forEach(page => {
-    page.addEventListener('mouseover', zoomIn);
     page.addEventListener('mousemove', zoomIn);
-    page.addEventListener('mouseout', zoomOut);
+    page.addEventListener('mouseout', hideZoom);
 });
 
 pdfjsLib.getDocument(pdfPath).promise.then((pdfDoc_) => {

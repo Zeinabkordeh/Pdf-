@@ -7,7 +7,7 @@ body {
     background-color: #f0f0f0;
     margin: 0;
     background-image: url(/Logo/Coalprints.png);
-    background-blend-mode:soft-light;
+    background-blend-mode: soft-light;
     background-size: cover; 
     background-repeat: no-repeat; 
     background-position: center; 
@@ -51,7 +51,7 @@ body {
     height: 100%;
     display: flex;
     flex-direction: row;
-    transform-style:preserve-3d;
+    transform-style: preserve-3d;
 }
 
 .page {
@@ -63,6 +63,7 @@ body {
     backface-visibility: hidden;
     position: relative;
     transition: transform 0.5s;
+    cursor: zoom-in; /* Change cursor to zoom-in */
 }
 
 .page canvas {
@@ -97,22 +98,18 @@ button:hover {
 .magnifier {
     position: absolute;
     border: 1px solid #ccc;
-    width: 150px;
-    height: 150px;
+    width: 350px; /* Adjust the width */
+    height: 350px; /* Adjust the height */
     overflow: hidden;
     display: none;
     pointer-events: none;
     background-color: white;
     z-index: 10;
+    cursor: none; /* Hide the cursor within the magnifier */
 }
 
 .magnifier img {
     position: absolute;
     width: 300%; /* Zoom level */
     height: 300%;
-}
-
-.zoomed {
-    transform: scale(2); /* Adjust zoom level as needed */
-    z-index: 1000;
 }
