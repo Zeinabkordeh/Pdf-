@@ -99,7 +99,7 @@ button:hover {
     position: absolute;
     border: 1px solid #ccc;
     width: 350px; /* Adjust the width */
-    height: 350px; /* Adjust the height */
+    height: 200px; /* Adjust the height */
     overflow: hidden;
     display: none;
     pointer-events: none;
