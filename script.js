@@ -3,6 +3,8 @@ import * as pdfjsLib from './node_modules/pdfjs-dist/build/pdf.mjs';
 // Initialize PDF.js
 pdfjsLib.GlobalWorkerOptions.workerSrc = './node_modules/pdfjs-dist/build/pdf.worker.mjs';
 
+let pdfPath = 'pdfs/HHWWnew.pdf';
+
 let pdfDoc = null;
 let pageNum = 1;
 let pageRendering = false;
@@ -160,3 +162,8 @@ document.querySelectorAll('.pdf-button').forEach(button => {
 
 // Load the initial PDF
 loadPdf(currentPdfPath);
+
+document.getElementById('pdf-select').addEventListener('change', (event) => {
+    pdfPath = event.target.value;
+    loadPdf(pdfPath);
+});

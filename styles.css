@@ -33,7 +33,12 @@ body {
 .pdf-menu {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: baseline;
+}
+
+.title-pdf{
+    margin-top: 0;
+    margin-right: 10px;
 }
 
 div#pdf-viewer {
@@ -49,8 +54,11 @@ div#pdf-viewer {
     border: none;
     border-radius: 4px;
     margin-bottom: 10px;
-    width: 160px; /* Adjust width if necessary */
-    font-size: 18px; /* Increase font size */
+}
+
+button.pdf-button {
+    width: 90%;
+    font-size: 1rem;
 }
 
 .pdf-button:hover {
@@ -150,16 +158,22 @@ button:hover {
     z-index: 1000;
 }
 
+.pdf-selection{
+    display: none;
+} 
+
 @media (max-width: 880px) {
-    .pdf-button {
-        width: 120px;
-        font-size: 14px;
-        padding: 6px 12px;
+    .pdf-menu {
+        display: none;
     }
 
     #pdf-viewer {
         width: 100%;
         margin-top: 120px;
+    }
+
+    .title-pdf{
+        font-size: 1.2rem;
     }
 
     button {
@@ -174,27 +188,35 @@ button:hover {
         flex-direction: row;
         align-items: center;
         padding: 0;
-        }
-    
-
-    .pdf-menu {
-        flex-direction: row;
-        margin-left: 10%;
     }
+
+    .pdf-selection{
+        display: block;
+        margin-top: 0;
+        margin-left: 30px;
+    }
+
+
 }
 
 @media (max-width: 400px) {
-    .pdf-button {
-        width: 70px;
-        height: 35px;
-        font-size: .6rem;
-        text-align: left;
+    
+    .logo {
+        max-width: 70px;
     }
 
     button {
-        max-width: 60px;
+        max-width: 20%;
         height: 35px;
-        font-size: .6rem;
+        font-size: .7rem;
+    }
+
+    .title-pdf{
+        font-size: .7rem;
+    }
+
+    .pdf-selection{
+        display: block;
     }
 
 }
