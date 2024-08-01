@@ -8,21 +8,53 @@ body {
     margin: 0;
     background-image: url(/Logo/Coalprints.png);
     background-blend-mode: soft-light;
-    background-size: cover; 
-    background-repeat: no-repeat; 
-    background-position: center; 
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .header {
-    width: 100%;
     display: flex;
-    justify-content: left;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    z-index: 1000;
 }
 
 .logo {
     max-width: 80px;
     height: auto;
-    margin: 20px 50px 0 50px;
+    margin-bottom: 20px;
+}
+
+.pdf-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+div#pdf-viewer {
+    display: flex;
+    height: auto;
+}
+
+.pdf-button {
+    cursor: pointer;
+    padding: 10px 20px;
+    background-color: #009fe3;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    width: 160px; /* Adjust width if necessary */
+    font-size: 18px; /* Increase font size */
+}
+
+.pdf-button:hover {
+    background-color: #e6007e;
 }
 
 .loader {
@@ -38,7 +70,7 @@ body {
     width: 55%;
     height: 75%;
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 70px auto 0 auto;
     border: 1px solid #ccc;
     display: flex;
     justify-content: center;
@@ -63,7 +95,7 @@ body {
     backface-visibility: hidden;
     position: relative;
     transition: transform 0.5s;
-    cursor: zoom-in; /* Change cursor to zoom-in */
+    cursor: zoom-in;
 }
 
 .page canvas {
@@ -92,24 +124,77 @@ button {
 }
 
 button:hover {
-    background-color: #009fe3;
+    background-color: #e6007e;
 }
 
 .magnifier {
     position: absolute;
     border: 1px solid #ccc;
-    width: 350px; /* Adjust the width */
-    height: 200px; /* Adjust the height */
+    width: 350px;
+    height: 200px;
     overflow: hidden;
     display: none;
     pointer-events: none;
     background-color: white;
     z-index: 10;
-    cursor: none; /* Hide the cursor within the magnifier */
 }
 
 .magnifier img {
     position: absolute;
     width: 300%; /* Zoom level */
     height: 300%;
+}
+
+.zoomed {
+    transform: scale(2); /* Adjust zoom level as needed */
+    z-index: 1000;
+}
+
+@media (max-width: 880px) {
+    .pdf-button {
+        width: 120px;
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+
+    #pdf-viewer {
+        width: 100%;
+        margin-top: 120px;
+    }
+
+    button {
+        max-width: 120px;
+        height: 40px;
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+
+    .header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 0;
+        }
+    
+
+    .pdf-menu {
+        flex-direction: row;
+        margin-left: 10%;
+    }
+}
+
+@media (max-width: 400px) {
+    .pdf-button {
+        width: 70px;
+        height: 35px;
+        font-size: .6rem;
+        text-align: left;
+    }
+
+    button {
+        max-width: 60px;
+        height: 35px;
+        font-size: .6rem;
+    }
+
 }

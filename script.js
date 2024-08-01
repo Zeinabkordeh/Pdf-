@@ -1,8 +1,5 @@
 import * as pdfjsLib from './node_modules/pdfjs-dist/build/pdf.mjs';
 
-// Path to your PDF file
-const pdfPath = 'pdfs/HHWWnew.pdf';
-
 // Initialize PDF.js
 pdfjsLib.GlobalWorkerOptions.workerSrc = './node_modules/pdfjs-dist/build/pdf.worker.mjs';
 
@@ -12,6 +9,7 @@ let pageRendering = false;
 let pageNumPending = null;
 let scale = 1;
 let zoomScale = 3; // Scale factor for zoom
+let currentPdfPath = 'pdfs/HHWWnew.pdf'; // Default PDF path
 
 const viewer = document.getElementById('pdf-viewer');
 const flipbook = document.createElement('div');
@@ -142,10 +140,23 @@ document.querySelectorAll('.page').forEach(page => {
     page.addEventListener('mouseout', hideZoom);
 });
 
-pdfjsLib.getDocument(pdfPath).promise.then((pdfDoc_) => {
-    pdfDoc = pdfDoc_;
-    renderPage(pageNum, scale);
-}).catch((error) => {
-    console.error('Error loading PDF:', error);
-    document.getElementById('loader').textContent = 'Error loading PDF';
+function loadPdf(pdfPath) {
+    pageNum = 1; // Reset to the first page
+    pdfjsLib.getDocument(pdfPath).promise.then((pdfDoc_) => {
+        pdfDoc = pdfDoc_;
+        renderPage(pageNum, scale);
+    }).catch((error) => {
+        console.error('Error loading PDF:', error);
+        document.getElementById('loader').textContent = 'Error loading PDF';
+    });
+}
+
+document.querySelectorAll('.pdf-button').forEach(button => {
+    button.addEventListener('click', (event) => {
+        currentPdfPath = event.target.dataset.pdf;
+        loadPdf(currentPdfPath);
+    });
 });
+
+// Load the initial PDF
+loadPdf(currentPdfPath);
