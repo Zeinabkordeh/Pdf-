@@ -4,7 +4,6 @@ import * as pdfjsLib from './node_modules/pdfjs-dist/build/pdf.mjs';
 pdfjsLib.GlobalWorkerOptions.workerSrc = './node_modules/pdfjs-dist/build/pdf.worker.mjs';
 
 let pdfPath = 'pdfs/HHWWnew.pdf';
-
 let pdfDoc = null;
 let pageNum = 1;
 let pageRendering = false;
@@ -12,6 +11,7 @@ let pageNumPending = null;
 let scale = 1;
 let zoomScale = 3; // Scale factor for zoom
 let currentPdfPath = 'pdfs/HHWWnew.pdf'; // Default PDF path
+let firstPageClicked = false; // Track if the first page button was clicked
 
 const viewer = document.getElementById('pdf-viewer');
 const flipbook = document.createElement('div');
@@ -42,7 +42,7 @@ magnifier.id = 'magnifier';
 magnifier.className = 'magnifier';
 document.body.appendChild(magnifier);
 
-function renderPage(num, scale) {
+function renderPage(num, scale, forZoom = false) {
     pageRendering = true;
     const renderTasks = [];
 
@@ -59,7 +59,11 @@ function renderPage(num, scale) {
                 viewport: viewport,
             };
 
-            return page.render(renderContext).promise;
+            return page.render(renderContext).promise.then(() => {
+                if (forZoom) {
+                    canvas.classList.add('high-res');
+                }
+            });
         });
     };
 
@@ -119,13 +123,40 @@ function zoomIn(event) {
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    const zoomedArea = document.getElementById('magnifier');
-    zoomedArea.style.backgroundImage = `url(${canvas.toDataURL()})`;
-    zoomedArea.style.backgroundSize = `${canvas.width * zoomScale}px ${canvas.height * zoomScale}px`;
-    zoomedArea.style.backgroundPosition = `-${x * zoomScale}px -${y * zoomScale}px`;
-    zoomedArea.style.display = 'block';
-    zoomedArea.style.left = `${event.clientX + 10}px`;
-    zoomedArea.style.top = `${event.clientY + 10}px`;
+
+    // Identify the correct page number based on the canvas ID
+    let pageNumber;
+    if (canvas.id === 'canvas-1') {
+        pageNumber = pageNum;
+    } else if (canvas.id === 'canvas-2') {
+        pageNumber = pageNum + 1;
+    }
+
+    // Create a higher resolution canvas for zoom
+    const zoomedCanvas = document.createElement('canvas');
+    const zoomedCtx = zoomedCanvas.getContext('2d');
+    zoomedCanvas.width = canvas.width * zoomScale;
+    zoomedCanvas.height = canvas.height * zoomScale;
+
+    // Render the PDF page again with higher scale for zoom
+    pdfDoc.getPage(pageNumber).then((page) => {
+        const viewport = page.getViewport({ scale: scale * zoomScale });
+        zoomedCanvas.width = viewport.width;
+        zoomedCanvas.height = viewport.height;
+        const renderContext = {
+            canvasContext: zoomedCtx,
+            viewport: viewport,
+        };
+        page.render(renderContext).promise.then(() => {
+            const zoomedArea = document.getElementById('magnifier');
+            zoomedArea.style.backgroundImage = `url(${zoomedCanvas.toDataURL()})`;
+            zoomedArea.style.backgroundSize = `${zoomedCanvas.width}px ${zoomedCanvas.height}px`;
+            zoomedArea.style.backgroundPosition = `-${x * zoomScale}px -${y * zoomScale}px`;
+            zoomedArea.style.display = 'block';
+            zoomedArea.style.left = `${event.clientX + 10}px`;
+            zoomedArea.style.top = `${event.clientY + 10}px`;
+        });
+    });
 }
 
 function hideZoom() {
@@ -135,12 +166,18 @@ function hideZoom() {
 
 document.getElementById('prev-page').addEventListener('click', onPrevPage);
 document.getElementById('next-page').addEventListener('click', onNextPage);
-document.getElementById('first-page').addEventListener('click', () => queueRenderPage(1, scale));
+document.getElementById('first-page').addEventListener('click', () => {
+    firstPageClicked = true;
+    queueRenderPage(1, scale);
+});
 
 document.querySelectorAll('.page').forEach(page => {
     page.addEventListener('mousemove', zoomIn);
     page.addEventListener('mouseout', hideZoom);
 });
+
+// Add an event listener to hide the zoom box when the mouse leaves the PDF viewer area
+viewer.addEventListener('mouseleave', hideZoom);
 
 function loadPdf(pdfPath) {
     pageNum = 1; // Reset to the first page
@@ -166,4 +203,10 @@ loadPdf(currentPdfPath);
 document.getElementById('pdf-select').addEventListener('change', (event) => {
     pdfPath = event.target.value;
     loadPdf(pdfPath);
+});
+
+document.getElementById('first-page').addEventListener('click', () => {
+    pageNum = 1;
+    queueRenderPage(pageNum, scale);
+    firstPageClicked = false;
 });
